@@ -2,11 +2,12 @@ package encryptdecrypt.context;
 
 import encryptdecrypt.factory.EncryptionFactory;
 import encryptdecrypt.strategy.EncryptionStrategy;
+import encryptdecrypt.types.ENCRYPTION_TYPE;
 
 public class EncryptionContext {
     private EncryptionStrategy strategy;
 
-    public void setStrategy(String strategy) {
+    public void setStrategy(ENCRYPTION_TYPE strategy) {
         this.strategy = EncryptionFactory.createStrategy(strategy);
     }
 

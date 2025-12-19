@@ -1,10 +1,7 @@
 package encryptdecrypt;
 import encryptdecrypt.context.EncryptionContext;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.File;
-import java.util.Scanner;
+import encryptdecrypt.types.ENCRYPTION_TYPE;
+import encryptdecrypt.file.FileHandler;
 
 public class Main {
     public static void main(String[] args) {
@@ -42,57 +39,21 @@ public class Main {
         if (data != null) {
             message = data;
         } else if (inputFile != null) {
-            message = readFile(inputFile);
+            message = FileHandler.readFile(inputFile);
             if (message == null) return;
         }
 
         EncryptionContext context = new EncryptionContext();
-
-        switch (algorithm) {
-            case "unicode":
-                context.setStrategy("unicode");
-                break;
-            case "shift":
-            default:
-                context.setStrategy("shift");
-                break;
-        }
+        context.setStrategy(ENCRYPTION_TYPE.fromString(algorithm));
 
         String result = mode.equals("dec") ?
                 context.decrypt(message, key) :
                 context.encrypt(message, key);
 
         if (outputFile != null) {
-            writeFile(outputFile, result);
+            FileHandler.writeFile(outputFile, result);
         } else {
             System.out.println(result);
-        }
-    }
-
-    private static String readFile(String inputFile) {
-        try {
-            File file = new File(inputFile);
-            Scanner scanner = new Scanner(file);
-            StringBuilder sb = new StringBuilder();
-            while (scanner.hasNextLine()) {
-                sb.append(scanner.nextLine());
-                if (scanner.hasNextLine()) sb.append("\n");
-            }
-            scanner.close();
-            return sb.toString();
-        } catch (IOException e) {
-            System.out.println("Error: Cannot read file " + inputFile);
-            return null;
-        }
-    }
-
-    private static void writeFile(String outputFile, String data) {
-        try {
-            FileWriter writer = new FileWriter(outputFile);
-            writer.write(data);
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("Error: Cannot write file " + outputFile);
         }
     }
 }
